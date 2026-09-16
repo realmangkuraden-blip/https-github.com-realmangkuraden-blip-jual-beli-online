@@ -1,7 +1,22 @@
 # Supabase setup
 
-Project database should contain `categories`, `products`, `orders`, and `order_items`.
+The marketplace uses `categories`, `products`, `orders`, `order_items`, and `admin_users`.
 
-Create an Admin user in Supabase Authentication, then grant that user admin authorization using the project's chosen RLS strategy. Do not expose the service-role key in the browser.
+## Admin account
 
-For production, add Storage bucket `product-images` and restrict uploads to authenticated admins.
+Create an admin user in Supabase Authentication, then insert its Auth UUID into `public.admin_users`. The dashboard verifies membership in that table before allowing access.
+
+## Product images
+
+The `product-images` bucket is public for displaying catalog images. Storage RLS restricts upload, update, and delete operations to users in `admin_users`. Maximum image size is 5 MB.
+
+## Environment variables
+
+Client:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+
+Server only:
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+Never expose the service-role key in browser code or a `NEXT_PUBLIC_` variable.
